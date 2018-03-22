@@ -1,0 +1,137 @@
+{% extends 'callmemaybe/base.html' %}
+{% load staticfiles %}
+{% block body %}
+
+<script type="text/javascript" src="{% static 'callmemaybe/assets/js/lib/jquery.min.js"></script>      
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="/js/flot/excanvas.min.js"></script><![endif]-->   
+<script type="text/javascript" src="{% static 'callmemaybe/assets/js/lib/flot-chart/jquery.flot.js' %}"></script>
+<script type="text/javascript" src="{% static 'callmemaybe/assets/js/lib/flot-chart/jquery.flot.pie.js' %}"></script>
+<script type="text/javascript" src="{% static 'callmemaybe/assets/js/lib/flot-chart/jquery.flot.time.js' %}"></script>
+<br>
+
+    <div class="content-wrap">
+      <div class="main">
+        <div class="container-fluid">
+        <h3>{{recordings.staff.name}}</h3>
+ <div class="row">
+              <div class="col-lg-6">
+                <div class="card">
+                  <div class="card-title">
+                    <h4>Pie Chart</h4>
+                  </div>
+                  <div class="flot-container">
+                    <div id="flot-placeholder" style="width:400px;height:300px"></div>
+				</div>
+                  </div>
+                </div>
+                <!-- /# card -->
+                             <div class="col-lg-6">
+                <div class="card">
+                  <div class="card-title">
+                    <h4>Line Chart</h4>
+                  </div>
+                  <div class="flot-container">
+                    <div id="placeholder2" class="flot-line" style="width:400px;height:300px"></div>
+                  </div>
+                </div>
+                <!-- /# card -->
+              </div>
+              </div>
+
+<script type="text/javascript">
+var dataSet = [
+    {label: "Positive", data: {{recordings.score.positive}}, color: "green" },
+    { label: "Negative", data: {{recordings.score.negative}}, color: "red" },
+    { label: "Neutral", data: {{recordings.score.neutral}}, color: "blue" },   
+];
+
+var options = { series: {
+    pie: {
+        show: true,                
+        label: {
+            show:true,
+            radius: 0.8,
+            formatter: function (label, series) {                
+                return '<div style="border:1px solid grey;font-size:8pt;text-align:center;padding:5px;color:white;">' +
+                label + ' : ' +
+                Math.round(series.percent) +
+                '%</div>';
+            },
+            background: {
+                opacity: 0.8,
+                color: '#000'
+            }
+        }
+    }
+}
+
+}
+
+$.fn.showMemo = function () {
+    $(this).bind("plothover", function (event, pos, item) {
+        if (!item) { return; }
+ 
+        var html = [];
+        var percent = parseFloat(item.series.percent).toFixed(2);        
+ 
+        html.push("<div style=\"border:1px solid grey;background-color:",
+             item.series.color,
+             "\">",
+             "<span style=\"color:white\">",
+             item.series.label,
+             " : ",
+             $.formatNumber(item.series.data[0][1], { format: "#,###", locale: "us" }),
+             " (", percent, "%)",
+             "</span>", 
+             "</div>");
+        $("#flot-memo").html(html.join(''));
+    });
+}
+
+
+var rawData = [
+    [1325347200000, 60], [1328025600000, 100], [1330531200000, 15], [1333209600000, 50]
+];
+
+ 
+var options2 = {
+    xaxis: {
+        mode: "time"
+    }
+}
+ 
+var rawData_1 = [
+    [1325347200000, 60], [1328025600000, 100], [1330531200000, 15], [1333209600000, 50]
+];
+ 
+var rawData_2 = [
+    [1325347200000, 5], [1328025600000, 12], [1330531200000, 7], [1333209600000, 25]
+];
+ 
+var dataset = [
+    { 
+        label: "Positive", 
+        data: rawData_1 
+    },
+    { 
+        label: "Negative", 
+        data: rawData_2
+    }
+];
+ 
+
+
+$(document).ready(function () {
+    $.plot($("#flot-placeholder"), dataSet, options);
+    $("#flot-placeholder").showMemo();
+    $.plot($("#placeholder2"),[
+        {                    
+            data: rawData
+        }
+    ], 
+    options2);
+});
+
+</script>
+
+{% endblock %}
