@@ -14,7 +14,7 @@ djangorestframework==3.7.7
 docutils==0.14
 gunicorn==19.7.1
 idna==2.6
-Jinja2==2.10
+Jinja2==2.11.3
 jmespath==0.9.3
 lxml==3.8.0
 Markdown==2.6.11
