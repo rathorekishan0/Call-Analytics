@@ -32,4 +32,4 @@ s3transfer==0.1.12
 six==1.11.0
 twilio==6.10.2
 typing==3.6.4
-urllib3==1.22
+urllib3==1.26.5
